@@ -3,8 +3,16 @@ import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import Papa from 'papaparse'
 
-// Full Lahore district bounds for the image overlay
 const BOUNDS = [[31.256, 74.003], [31.717, 74.641]]
+
+let boundaryRing = null
+async function fetchBoundary() {
+  if (boundaryRing) return boundaryRing
+  const res = await fetch('/data/boundary/lahore_boundary.geojson')
+  const geojson = await res.json()
+  boundaryRing = geojson.features[0].geometry.coordinates[0][0]
+  return boundaryRing
+}
 
 function lerp(a, b, t) { return Math.round(a + (b - a) * t) }
 
@@ -57,57 +65,98 @@ function idwHeat(lat, lng, heatCells) {
 
 const LOG_MAX = Math.log1p(35000)
 
-function buildPopCanvas(popRows, heatRows) {
+function buildPopCanvas(popRows, heatRows, ring) {
   const [[swLat, swLng], [neLat, neLng]] = BOUNDS
   const latSpan = neLat - swLat
   const lngSpan = neLng - swLng
+  const cellDeg = 0.009
+  const halfCell = cellDeg / 2
 
-  // Canvas resolution: ~8 pixels per 1km cell at zoom 11 (2× upscale at full view)
-  const W = 760, H = 560
-  const canvas = document.createElement('canvas')
-  canvas.width = W; canvas.height = H
-  const ctx = canvas.getContext('2d')
+  // Build regular grid array for fast bilinear lookup
+  const numCols = Math.ceil(lngSpan / cellDeg) + 2
+  const numRows = Math.ceil(latSpan / cellDeg) + 2
+  const grid = new Float32Array(numRows * numCols)
+  for (const row of popRows) {
+    if (!row.population || row.population <= 0) continue
+    const lat = parseFloat(row.lat)
+    const lng = parseFloat(row.lon)
+    const col = Math.round((lng - swLng - halfCell) / cellDeg)
+    const r   = Math.round((neLat - lat - halfCell) / cellDeg)
+    if (col >= 0 && col < numCols && r >= 0 && r < numRows)
+      grid[r * numCols + col] = row.population
+  }
 
-    // Population relative quartile — sorted ascending
+  function bilinearPop(lat, lng) {
+    const x = (lng - swLng - halfCell) / cellDeg
+    const y = (neLat - lat - halfCell) / cellDeg
+    const x0 = Math.floor(x), x1 = x0 + 1
+    const y0 = Math.floor(y), y1 = y0 + 1
+    const tx = x - x0, ty = y - y0
+    const get = (rr, cc) =>
+      rr < 0 || rr >= numRows || cc < 0 || cc >= numCols ? 0 : grid[rr * numCols + cc]
+    return get(y0,x0)*(1-tx)*(1-ty) + get(y0,x1)*tx*(1-ty)
+         + get(y1,x0)*(1-tx)*ty   + get(y1,x1)*tx*ty
+  }
+
   const popVals = popRows.filter(r => r.population > 0).map(r => r.population).sort((a, b) => a - b)
-
-  // Heat uses absolute thresholds (0–3°C global range) so SSP identity is preserved
-  // Q1 <0.75°C, Q2 0.75–1.5°C, Q3 1.5–2.25°C, Q4 ≥2.25°C
   const heatQuartile = heatRows
     ? (v) => v < 0.75 ? 1 : v < 1.5 ? 2 : v < 2.25 ? 3 : 4
     : null
 
-  // Cell size in degrees (1km population grid)
-  const cellDegLat = 0.009
-  const cellDegLng = 0.009
+  // Render each pixel with bilinearly interpolated pop value — smooth continuous surface
+  const W = 300, H = 220
+  const offscreen = document.createElement('canvas')
+  offscreen.width = W; offscreen.height = H
+  const offCtx = offscreen.getContext('2d')
+  const img = offCtx.createImageData(W, H)
 
-  const cellW = Math.ceil((cellDegLng / lngSpan) * W) + 1
-  const cellH = Math.ceil((cellDegLat / latSpan) * H) + 1
+  for (let py = 0; py < H; py++) {
+    const lat = neLat - (py / H) * latSpan
+    for (let px = 0; px < W; px++) {
+      const lng = swLng + (px / W) * lngSpan
+      const pop = bilinearPop(lat, lng)
+      if (pop <= 0) continue
 
-  for (const row of popRows) {
-    const pop = row.population
-    if (!pop || pop <= 0) continue
+      let r, g, b
+      if (heatRows && heatQuartile) {
+        const heatVal = idwHeat(lat, lng, heatRows)
+        const pq = quartile(pop, popVals)
+        const hq = heatQuartile(heatVal)
+        const rgb = BIVAR[`${pq},${hq}`] || [136, 136, 136]
+        r = rgb[0]; g = rgb[1]; b = rgb[2]
+      } else {
+        const rgb = popToRGBA(pop, LOG_MAX)
+        if (!rgb) continue
+        r = rgb[0]; g = rgb[1]; b = rgb[2]
+      }
 
-    const lat = parseFloat(row.lat)
-    const lng = parseFloat(row.lon)
-
-    const px = Math.round((lng - swLng) / lngSpan * W)
-    const py = Math.round((neLat - lat) / latSpan * H)
-
-    let rgba
-    if (heatRows && heatQuartile) {
-      const heatVal = idwHeat(lat, lng, heatRows)
-      const pq = quartile(pop, popVals)
-      const hq = heatQuartile(heatVal)
-      rgba = BIVAR[`${pq},${hq}`] || [136, 136, 136]
-    } else {
-      rgba = popToRGBA(pop, LOG_MAX)
-      if (!rgba) continue
+      const i = (py * W + px) * 4
+      img.data[i] = r; img.data[i+1] = g; img.data[i+2] = b; img.data[i+3] = 224
     }
-
-    ctx.fillStyle = `rgba(${rgba[0]},${rgba[1]},${rgba[2]},0.88)`
-    ctx.fillRect(px - Math.floor(cellW / 2), py - Math.floor(cellH / 2), cellW, cellH)
   }
+  offCtx.putImageData(img, 0, 0)
+
+  // Scale up to display size with bilinear smoothing, then apply crisp boundary mask
+  const DW = 760, DH = 560
+  const canvas = document.createElement('canvas')
+  canvas.width = DW; canvas.height = DH
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(offscreen, 0, 0, DW, DH)
+
+  ctx.globalCompositeOperation = 'destination-in'
+  ctx.fillStyle = 'white'
+  ctx.beginPath()
+  for (let i = 0; i < ring.length; i++) {
+    const [lng, lat] = ring[i]
+    const px = (lng - swLng) / lngSpan * DW
+    const py = (neLat - lat) / latSpan * DH
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py)
+  }
+  ctx.closePath()
+  ctx.fill()
+  ctx.globalCompositeOperation = 'source-over'
 
   return canvas.toDataURL()
 }
@@ -145,13 +194,14 @@ export default function PopulationLayer({ year, ssp, onCellClick, bivariateMode 
 
     async function load() {
       const popPath = getPopPath(year, ssp)
-      const [popRows, heatRows] = await Promise.all([
+      const [popRows, heatRows, ring] = await Promise.all([
         fetchCSV(popPath),
         bivariateMode ? fetchCSV(getHeatPath(year, ssp)) : Promise.resolve(null),
+        fetchBoundary(),
       ])
       if (cancelled) return
 
-      const dataUrl = buildPopCanvas(popRows, heatRows)
+      const dataUrl = buildPopCanvas(popRows, heatRows, ring)
       if (cancelled) return
 
       if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null }

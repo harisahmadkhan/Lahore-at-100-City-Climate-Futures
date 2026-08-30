@@ -3,10 +3,18 @@ import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import Papa from 'papaparse'
 
-// Lahore bounds for image overlay — full district
 const BOUNDS = [[31.256, 74.003], [31.717, 74.641]]
 const CANVAS_W = 300
 const CANVAS_H = 280
+
+let boundaryRing = null
+async function fetchBoundary() {
+  if (boundaryRing) return boundaryRing
+  const res = await fetch('/data/boundary/lahore_boundary.geojson')
+  const geojson = await res.json()
+  boundaryRing = geojson.features[0].geometry.coordinates[0][0]
+  return boundaryRing
+}
 
 function lerp(a, b, t) { return a + (b - a) * t }
 
@@ -41,14 +49,14 @@ function idw(lat, lng, cells, power = 2) {
   return sumW > 0 ? sumWV / sumW : 0
 }
 
-function buildHeatImageURL(cells) {
-  const canvas = document.createElement('canvas')
-  canvas.width = CANVAS_W
-  canvas.height = CANVAS_H
-  const ctx = canvas.getContext('2d')
-  const img = ctx.createImageData(CANVAS_W, CANVAS_H)
-
+function buildHeatImageURL(cells, ring) {
   const [[swLat, swLng], [neLat, neLng]] = BOUNDS
+
+  // putImageData ignores clip paths — draw to offscreen first
+  const offscreen = document.createElement('canvas')
+  offscreen.width = CANVAS_W; offscreen.height = CANVAS_H
+  const offCtx = offscreen.getContext('2d')
+  const img = offCtx.createImageData(CANVAS_W, CANVAS_H)
 
   for (let py = 0; py < CANVAS_H; py++) {
     const lat = neLat - (py / CANVAS_H) * (neLat - swLat)
@@ -57,14 +65,30 @@ function buildHeatImageURL(cells) {
       const val = idw(lat, lng, cells)
       const [r, g, b] = anomalyToRGBA(val)
       const i = (py * CANVAS_W + px) * 4
-      img.data[i] = r
-      img.data[i + 1] = g
-      img.data[i + 2] = b
-      img.data[i + 3] = 168 // 0.66 opacity
+      img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 168
     }
   }
+  offCtx.putImageData(img, 0, 0)
 
-  ctx.putImageData(img, 0, 0)
+  // Draw IDW gradient, then apply crisp boundary mask with destination-in
+  const canvas = document.createElement('canvas')
+  canvas.width = CANVAS_W; canvas.height = CANVAS_H
+  const ctx = canvas.getContext('2d')
+
+  ctx.drawImage(offscreen, 0, 0)
+
+  ctx.globalCompositeOperation = 'destination-in'
+  ctx.fillStyle = 'white'
+  ctx.beginPath()
+  for (let i = 0; i < ring.length; i++) {
+    const [lng, lat] = ring[i]
+    const px = (lng - swLng) / (neLng - swLng) * CANVAS_W
+    const py = (neLat - lat) / (neLat - swLat) * CANVAS_H
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py)
+  }
+  ctx.closePath()
+  ctx.fill()
+  ctx.globalCompositeOperation = 'source-over'
   return canvas.toDataURL()
 }
 
@@ -94,11 +118,10 @@ export default function HeatLayer({ year, ssp, onCellClick }) {
 
     async function load() {
       const path = getHeatPath(year, ssp)
-      const rows = await fetchCSV(path)
+      const [rows, ring] = await Promise.all([fetchCSV(path), fetchBoundary()])
       if (cancelled) return
 
-      // Build interpolated canvas image
-      const dataUrl = buildHeatImageURL(rows)
+      const dataUrl = buildHeatImageURL(rows, ring)
       if (cancelled) return
 
       if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null }

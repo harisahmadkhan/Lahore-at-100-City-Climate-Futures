@@ -5,6 +5,27 @@ import Papa from 'papaparse'
 
 const BOUNDS = [[31.256, 74.003], [31.717, 74.641]]
 
+let boundaryRing = null
+async function fetchBoundary() {
+  if (boundaryRing) return boundaryRing
+  const res = await fetch('/data/boundary/lahore_boundary.geojson')
+  const geojson = await res.json()
+  boundaryRing = geojson.features[0].geometry.coordinates[0][0]
+  return boundaryRing
+}
+
+function applyBoundaryPath(ctx, ring, W, H) {
+  const [[swLat, swLng], [neLat, neLng]] = BOUNDS
+  ctx.beginPath()
+  for (let i = 0; i < ring.length; i++) {
+    const [lng, lat] = ring[i]
+    const px = (lng - swLng) / (neLng - swLng) * W
+    const py = (neLat - lat) / (neLat - swLat) * H
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py)
+  }
+  ctx.closePath()
+}
+
 // Urban class colours
 const CLASS_RGBA = {
   1: [34,  60,  34,  130], // rural — dark muted green
@@ -35,13 +56,14 @@ function snapSettlementYear(year) {
   return avail.reduce((best, y) => Math.abs(y - year) < Math.abs(best - year) ? y : best, avail[0])
 }
 
-function buildUrbanCanvas(urbanRows) {
+function buildUrbanCanvas(urbanRows, ring) {
   const [[swLat, swLng], [neLat, neLng]] = BOUNDS
   const W = 800, H = 640
-  const canvas = document.createElement('canvas')
-  canvas.width = W; canvas.height = H
-  const ctx = canvas.getContext('2d')
-  const img = ctx.createImageData(W, H)
+
+  const offscreen = document.createElement('canvas')
+  offscreen.width = W; offscreen.height = H
+  const offCtx = offscreen.getContext('2d')
+  const img = offCtx.createImageData(W, H)
 
   const cellLat = 0.009
   const cellLng = 0.009
@@ -67,27 +89,32 @@ function buildUrbanCanvas(urbanRows) {
     for (let py = y0; py < y1; py++) {
       for (let px = x0; px < x1; px++) {
         const i = (py * W + px) * 4
-        img.data[i]     = rgba[0]
-        img.data[i + 1] = rgba[1]
-        img.data[i + 2] = rgba[2]
-        img.data[i + 3] = rgba[3]
+        img.data[i] = rgba[0]; img.data[i+1] = rgba[1]; img.data[i+2] = rgba[2]; img.data[i+3] = rgba[3]
       }
     }
   }
+  offCtx.putImageData(img, 0, 0)
 
-  ctx.putImageData(img, 0, 0)
-  return canvas.toDataURL()
-}
-
-function buildSettlementCanvas(settleRows) {
-  const [[swLat, swLng], [neLat, neLng]] = BOUNDS
-  // Settlement is 100m resolution = 0.0009 degrees
-  // Full grid: ~444 wide × ~510 tall at this extent
-  const W = 444, H = 510
   const canvas = document.createElement('canvas')
   canvas.width = W; canvas.height = H
   const ctx = canvas.getContext('2d')
-  const img = ctx.createImageData(W, H)
+  ctx.drawImage(offscreen, 0, 0)
+  ctx.globalCompositeOperation = 'destination-in'
+  ctx.fillStyle = 'white'
+  applyBoundaryPath(ctx, ring, W, H)
+  ctx.fill()
+  ctx.globalCompositeOperation = 'source-over'
+  return canvas.toDataURL()
+}
+
+function buildSettlementCanvas(settleRows, ring) {
+  const [[swLat, swLng], [neLat, neLng]] = BOUNDS
+  const W = 444, H = 510
+
+  const offscreen = document.createElement('canvas')
+  offscreen.width = W; offscreen.height = H
+  const offCtx = offscreen.getContext('2d')
+  const img = offCtx.createImageData(W, H)
 
   for (const row of settleRows) {
     if (row.built !== 1) continue
@@ -97,13 +124,20 @@ function buildSettlementCanvas(settleRows) {
     const py = Math.round((neLat - lat) / (neLat - swLat) * H)
     if (px < 0 || px >= W || py < 0 || py >= H) continue
     const i = (py * W + px) * 4
-    img.data[i]     = SETTLE_RGBA[0]
-    img.data[i + 1] = SETTLE_RGBA[1]
-    img.data[i + 2] = SETTLE_RGBA[2]
-    img.data[i + 3] = SETTLE_RGBA[3]
+    img.data[i] = SETTLE_RGBA[0]; img.data[i+1] = SETTLE_RGBA[1]
+    img.data[i+2] = SETTLE_RGBA[2]; img.data[i+3] = SETTLE_RGBA[3]
   }
+  offCtx.putImageData(img, 0, 0)
 
-  ctx.putImageData(img, 0, 0)
+  const canvas = document.createElement('canvas')
+  canvas.width = W; canvas.height = H
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(offscreen, 0, 0)
+  ctx.globalCompositeOperation = 'destination-in'
+  ctx.fillStyle = 'white'
+  applyBoundaryPath(ctx, ring, W, H)
+  ctx.fill()
+  ctx.globalCompositeOperation = 'source-over'
   return canvas.toDataURL()
 }
 
@@ -120,15 +154,15 @@ export default function UrbanExpansionLayer({ year, ssp, onCellClick }) {
       const settleYear = snapSettlementYear(Math.min(year, 2020))
       const showSettle = year <= 2020
 
-      const [urbanRows, settleRows] = await Promise.all([
+      const [urbanRows, settleRows, ring] = await Promise.all([
         fetchCSV(`/data/urbanisation/urbanisation_lahore_${urbanYear}.csv`),
         showSettle ? fetchCSV(`/data/settlement/settlement_lahore_${settleYear}.csv`) : Promise.resolve([]),
+        fetchBoundary(),
       ])
       if (cancelled) return
 
-      // Build canvases (CPU work)
-      const urbanUrl = buildUrbanCanvas(urbanRows)
-      const settleUrl = showSettle ? buildSettlementCanvas(settleRows) : null
+      const urbanUrl = buildUrbanCanvas(urbanRows, ring)
+      const settleUrl = showSettle ? buildSettlementCanvas(settleRows, ring) : null
       if (cancelled) return
 
       // Remove old layers
