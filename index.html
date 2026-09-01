@@ -7,6 +7,8 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root { --strip-h: 56px; }
+
   body {
     background: #050810;
     color: #fff;
@@ -192,30 +194,60 @@
     border-left: 1px solid rgba(255,255,255,0.07);
   }
 
-  /* ── Corner credits ── */
-  .credit-tl {
+  /* ── Title block ── */
+  .title-block {
     position: fixed;
-    top: 28px;
-    left: 32px;
+    bottom: calc(var(--strip-h) + 40px);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
     z-index: 10;
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.28);
-    letter-spacing: 0.04em;
     pointer-events: none;
-    line-height: 1.7;
+    white-space: nowrap;
   }
 
-  .credit-br {
+  .title-block h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 200;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.95);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .title-block h1 strong {
+    font-weight: 700;
+    color: #f5e4a8;
+  }
+
+  .title-block p {
+    font-size: clamp(0.72rem, 1.3vw, 0.85rem);
+    color: rgba(255,255,255,0.50);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Credits bar — bottom-left, above tabs ── */
+  .credits {
     position: fixed;
-    bottom: calc(148px + 1.7rem);
-    right: 32px;
+    bottom: calc(var(--strip-h) + 12px);
+    left: 28px;
     z-index: 10;
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.20);
-    letter-spacing: 0.06em;
-    text-align: right;
     pointer-events: none;
-    line-height: 1.8;
+    line-height: 1.6;
+  }
+
+  .credits-name {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    letter-spacing: 0.02em;
+  }
+
+  .credits-event {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.42);
+    letter-spacing: 0.04em;
   }
 </style>
 </head>
@@ -223,12 +255,16 @@
 
 <div class="hero"></div>
 
-<!-- Corner credits — far from the image center -->
-<div class="credit-tl">
-  Designed and built with curiosity by Haris Ahmad Khan
+<!-- Title overlaid on the image -->
+<div class="title-block">
+  <h1>Lahore <strong>@ 100</strong></h1>
+  <p>The data already knows what is coming. Now citizens can see it too.</p>
 </div>
-<div class="credit-br">
-  Smart City Hackathon Lahore 2026<br>Theme 2: City Intelligence · MIT License
+
+<!-- Credits — bottom-left, just above the tab strip -->
+<div class="credits">
+  <div class="credits-name">Designed and built with curiosity by Haris Ahmad Khan</div>
+  <div class="credits-event">Smart City Hackathon Lahore 2026 · Theme 2: City Intelligence · MIT License</div>
 </div>
 
 <!-- Lens strip — bottom of screen -->
