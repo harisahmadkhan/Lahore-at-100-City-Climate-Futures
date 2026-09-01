@@ -8,161 +8,332 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: #0A0F1E;
-    color: #ffffff;
+    background: #050810;
+    color: #fff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('hero.png');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+
+  /* layered gradient: top dark band → city visible → heavy dark bottom */
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom,
+        rgba(5,8,16,0.72) 0%,
+        rgba(5,8,16,0.10) 30%,
+        rgba(5,8,16,0.10) 52%,
+        rgba(5,8,16,0.82) 72%,
+        rgba(5,8,16,0.97) 100%
+      );
+  }
+
+  /* ── Top badge ── */
+  .top-bar {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
+    gap: 10px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
   }
 
-  header {
+  .top-bar-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 8px #10B981;
+    flex-shrink: 0;
+  }
+
+  /* ── Content ── */
+  .content {
+    position: relative;
+    z-index: 2;
+    padding: 0 24px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .headline {
     text-align: center;
-    margin-bottom: 56px;
+    margin-bottom: 10px;
   }
 
-  h1 {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
+  .headline h1 {
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    font-weight: 300;
+    letter-spacing: 0.12em;
     color: #ffffff;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin-bottom: 12px;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
-  .subtitle {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    color: #f5f0e8;
-    margin-bottom: 8px;
+  .headline h1 span {
+    font-weight: 700;
+    color: #f5e6b8;
+  }
+
+  .headline .at {
+    font-weight: 200;
+    color: rgba(255,255,255,0.5);
+    margin: 0 0.15em;
   }
 
   .tagline {
-    font-size: 0.95rem;
-    color: #8a9ab5;
-    letter-spacing: 0.04em;
+    text-align: center;
+    font-size: clamp(0.82rem, 1.8vw, 1rem);
+    color: rgba(255,255,255,0.52);
+    letter-spacing: 0.03em;
+    margin-bottom: 36px;
+    max-width: 520px;
   }
 
-  .grid {
+  /* ── Lens tabs ── */
+  .tabs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
     width: 100%;
     max-width: 900px;
-    margin-bottom: 64px;
   }
 
-  .card {
-    background: #111827;
-    border-radius: 12px;
-    padding: 28px 24px;
-    border: 1px solid #1e2a3a;
+  @media (max-width: 700px) {
+    .tabs { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .tab {
+    position: relative;
+    background: rgba(10,15,30,0.55);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    padding: 22px 18px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    gap: 7px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    overflow: hidden;
+    cursor: default;
   }
 
-  a.card {
+  a.tab {
     text-decoration: none;
     color: inherit;
     cursor: pointer;
   }
 
-  a.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  a.tab:hover {
+    transform: translateY(-4px);
+    background: rgba(15,20,40,0.70);
   }
 
-  .card-accent {
-    width: 36px;
-    height: 4px;
-    border-radius: 2px;
-    margin-bottom: 4px;
+  /* top accent line */
+  .tab::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    background: var(--accent);
+    opacity: 0.9;
   }
 
-  .card h2 {
-    font-size: 1.1rem;
+  /* glow on hover for active */
+  a.tab[data-lens="urban"]:hover  { box-shadow: 0 8px 32px rgba(139,92,246,0.28); border-color: rgba(139,92,246,0.40); }
+  a.tab[data-lens="population"]:hover { box-shadow: 0 8px 32px rgba(16,185,129,0.28); border-color: rgba(16,185,129,0.40); }
+
+  .tab[data-lens="urban"]      { --accent: #8B5CF6; }
+  .tab[data-lens="population"] { --accent: #10B981; }
+  .tab[data-lens="water"]      { --accent: #06B6D4; }
+  .tab[data-lens="heat"]       { --accent: #F97316; }
+
+  .tab-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .tab-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .tab-name {
+    font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
+    line-height: 1.2;
   }
 
-  .card p {
-    font-size: 0.875rem;
-    color: #8a9ab5;
-    line-height: 1.5;
+  .tab-desc {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.46);
+    line-height: 1.45;
   }
 
-  .card.dimmed {
-    opacity: 0.45;
-    cursor: default;
+  .tab-arrow {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tab-arrow svg {
+    width: 12px; height: 12px;
+    transition: transform 0.2s ease;
+  }
+
+  a.tab:hover .tab-arrow svg { transform: translateX(3px); }
+
+  /* dimmed state */
+  .tab.dimmed {
+    opacity: 0.38;
     pointer-events: none;
   }
 
-  .coming-soon {
-    font-size: 0.75rem;
-    color: #4a5568;
-    font-style: italic;
+  .tab-coming {
     margin-top: 4px;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
   }
 
-  /* accent borders */
-  a.card[data-lens="urban"] { border-top: 3px solid #8B5CF6; }
-  a.card[data-lens="population"] { border-top: 3px solid #10B981; }
-  .card[data-lens="water"] { border-top: 3px solid #06B6D4; }
-  .card[data-lens="heat"] { border-top: 3px solid #F97316; }
-
+  /* ── Footer ── */
   footer {
-    text-align: center;
-    font-size: 0.78rem;
-    color: #4a5568;
-    line-height: 1.8;
+    position: absolute;
+    bottom: 20px;
+    left: 32px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.02em;
+    z-index: 2;
+  }
+
+  .footer-right {
+    position: absolute;
+    bottom: 20px;
+    right: 32px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.02em;
+    z-index: 2;
+    text-align: right;
   }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Lahore at 100</h1>
-  <p class="subtitle">Climate Conscious City Futures</p>
-  <p class="tagline">Four lenses. Five futures. One city.</p>
-</header>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-gradient"></div>
 
-<div class="grid">
-
-  <a class="card" href="urban_expansion.html" data-lens="urban">
-    <div class="card-accent" style="background:#8B5CF6;"></div>
-    <h2>Urban Expansion</h2>
-    <p>Built-settlement growth and degree of urbanisation across Lahore, 2001–2080.</p>
-  </a>
-
-  <a class="card" href="population.html" data-lens="population">
-    <div class="card-accent" style="background:#10B981;"></div>
-    <h2>Population Growth</h2>
-    <p>Measured population counts transitioning to five diverging SSP projections, 2015–2050.</p>
-  </a>
-
-  <div class="card dimmed" data-lens="water">
-    <div class="card-accent" style="background:#06B6D4;"></div>
-    <h2>Water Stress</h2>
-    <p>WRI Aqueduct 4.0 watershed demand and supply across three scenarios.</p>
-    <span class="coming-soon">Coming at final stage</span>
+  <!-- Top badge -->
+  <div class="top-bar">
+    <span class="top-bar-dot"></span>
+    Smart City Hackathon Lahore 2026 &nbsp;·&nbsp; Theme 2: City Intelligence
   </div>
 
-  <div class="card dimmed" data-lens="heat">
-    <div class="card-accent" style="background:#F97316;"></div>
-    <h2>Heat Anomaly</h2>
-    <p>Maximum temperature anomaly against 1970–2000 baseline across five SSP pathways.</p>
-    <span class="coming-soon">Coming at final stage</span>
+  <!-- Main content -->
+  <div class="content">
+
+    <div class="headline">
+      <h1>Lahore<span class="at">@</span><span>100</span></h1>
+    </div>
+    <p class="tagline">The data already knows what is coming. Now citizens can see it too.</p>
+
+    <div class="tabs">
+
+      <a class="tab" href="urban_expansion.html" data-lens="urban">
+        <div class="tab-icon">🏙</div>
+        <div class="tab-label">Lens 01</div>
+        <div class="tab-name">Urban Expansion</div>
+        <div class="tab-desc">Built-settlement growth and degree of urbanisation, 2001–2080.</div>
+        <div class="tab-arrow">
+          Explore
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M2 6h8M6 2l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+
+      <a class="tab" href="population.html" data-lens="population">
+        <div class="tab-icon">📈</div>
+        <div class="tab-label">Lens 02</div>
+        <div class="tab-name">Population Growth</div>
+        <div class="tab-desc">Measured counts transitioning to five diverging SSP projections, 2015–2050.</div>
+        <div class="tab-arrow">
+          Explore
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M2 6h8M6 2l4 4-4 4"/>
+          </svg>
+        </div>
+      </a>
+
+      <div class="tab dimmed" data-lens="water">
+        <div class="tab-icon">💧</div>
+        <div class="tab-label">Lens 03</div>
+        <div class="tab-name">Water Stress</div>
+        <div class="tab-desc">WRI Aqueduct 4.0 watershed demand across three scenarios.</div>
+        <div class="tab-coming">Coming at final stage</div>
+      </div>
+
+      <div class="tab dimmed" data-lens="heat">
+        <div class="tab-icon">🌡</div>
+        <div class="tab-label">Lens 04</div>
+        <div class="tab-name">Heat Anomaly</div>
+        <div class="tab-desc">Temperature anomaly vs 1970–2000 baseline across five SSP pathways.</div>
+        <div class="tab-coming">Coming at final stage</div>
+      </div>
+
+    </div>
   </div>
 
-</div>
+  <footer>Designed and built with curiosity by Haris Ahmad Khan</footer>
+  <div class="footer-right">MIT License</div>
 
-<footer>
-  Smart City Hackathon Lahore 2026 &middot; Theme 2: City Intelligence &middot; MIT License
-</footer>
+</section>
 
 </body>
 </html>
