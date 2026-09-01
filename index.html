@@ -69,7 +69,7 @@
   /* ── Individual tab ── */
   .lens-tab {
     position: relative;
-    padding: 14px 20px 18px;
+    padding: 12px 18px 16px;
     border-top: 2px solid var(--accent);
     background: rgba(4, 7, 18, 1.00);
     text-decoration: none;
@@ -80,47 +80,97 @@
   }
 
   .lens-tab:not(.dimmed):hover {
-    background: rgba(8, 12, 30, 0.85);
+    background: rgba(10, 15, 35, 1.00);
+    box-shadow: inset 0 0 48px var(--glow);
   }
 
   /* colour variables */
-  .lens-tab[data-lens="urban"]      { --accent: #8B5CF6; --glow: rgba(139,92,246,0.22); }
-  .lens-tab[data-lens="population"] { --accent: #10B981; --glow: rgba(16,185,129,0.22); }
-  .lens-tab[data-lens="water"]      { --accent: #06B6D4; --glow: rgba(6,182,212,0.15);  }
-  .lens-tab[data-lens="heat"]       { --accent: #F97316; --glow: rgba(249,115,22,0.15); }
+  .lens-tab[data-lens="urban"]      { --accent: #8B5CF6; --glow: rgba(139,92,246,0.18); }
+  .lens-tab[data-lens="population"] { --accent: #10B981; --glow: rgba(16,185,129,0.18); }
+  .lens-tab[data-lens="water"]      { --accent: #06B6D4; --glow: rgba(6,182,212,0.14);  }
+  .lens-tab[data-lens="heat"]       { --accent: #F97316; --glow: rgba(249,115,22,0.14); }
 
-  .lens-tab:not(.dimmed):hover {
-    box-shadow: inset 0 0 40px var(--glow);
-  }
-
-  /* Always-visible header row */
+  /* ── Always-visible header ── */
   .tab-header {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 11px;
+  }
+
+  .tab-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .lens-tab:not(.dimmed):hover .tab-icon {
+    transform: scale(1.15);
+  }
+
+  .tab-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
   }
 
   .tab-num {
-    font-size: 0.65rem;
+    font-size: 0.58rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     color: var(--accent);
-    opacity: 0.8;
+    text-transform: uppercase;
+    opacity: 0.75;
   }
 
   .tab-name {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     font-weight: 600;
-    color: rgba(255,255,255,0.85);
-    letter-spacing: 0.02em;
-    flex: 1;
+    color: rgba(255,255,255,0.88);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* Collapse/expand body via grid trick */
+  /* ── IN DEV badge ── */
+  .dev-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 5px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(251,191,36,0.35);
+    background: rgba(251,191,36,0.08);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: rgba(251,191,36,0.80);
+    width: fit-content;
+  }
+
+  .dev-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(251,191,36,0.8);
+    animation: pulse-dot 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── Expand body ── */
   .tab-body {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: grid-template-rows 0.30s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .lens-tab:not(.dimmed):hover .tab-body {
@@ -132,10 +182,11 @@
   }
 
   .tab-desc {
-    margin-top: 9px;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.44);
+    margin-top: 10px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.40);
     line-height: 1.5;
+    padding-left: 2.5rem; /* align under tab name */
   }
 
   /* Click hint */
@@ -143,15 +194,16 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 10px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.07em;
+    margin-top: 8px;
+    padding-left: 2.5rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--accent);
     opacity: 0;
     transform: translateY(4px);
-    transition: opacity 0.2s ease 0.12s, transform 0.2s ease 0.12s;
+    transition: opacity 0.18s ease 0.10s, transform 0.18s ease 0.10s;
   }
 
   .lens-tab:not(.dimmed):hover .click-hint {
@@ -159,14 +211,12 @@
     transform: translateY(0);
   }
 
-  /* Bouncing arrow */
   .hint-arrow {
     display: inline-block;
-    animation: none;
   }
 
   .lens-tab:not(.dimmed):hover .hint-arrow {
-    animation: bounce-x 0.7s ease infinite;
+    animation: bounce-x 0.75s ease infinite;
   }
 
   @keyframes bounce-x {
@@ -174,14 +224,14 @@
     50%       { transform: translateX(5px); }
   }
 
-  /* Ripple on click */
+  /* Ripple */
   .ripple {
     position: absolute;
     border-radius: 50%;
     width: 10px;
     height: 10px;
     background: var(--accent);
-    opacity: 0.5;
+    opacity: 0.4;
     transform: scale(0);
     pointer-events: none;
   }
@@ -190,25 +240,15 @@
     to { transform: scale(30); opacity: 0; }
   }
 
-  /* Dimmed state */
+  /* Dimmed state for in-dev tabs */
   .lens-tab.dimmed {
     cursor: default;
-    opacity: 0.38;
+    opacity: 0.55; /* slightly more visible than before so badge reads */
   }
 
-  .tab-coming {
-    margin-top: 8px;
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.3);
-    font-style: italic;
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.25s ease;
-  }
-
-  /* Separator lines between tabs */
+  /* Separator lines */
   .lens-tab + .lens-tab {
-    border-left: 1px solid rgba(255,255,255,0.07);
+    border-left: 1px solid rgba(255,255,255,0.06);
   }
 
   /* ── Title block ── */
@@ -292,12 +332,15 @@
 
   <a class="lens-tab" href="urban_expansion.html" data-lens="urban">
     <div class="tab-header">
-      <span class="tab-num">01</span>
-      <span class="tab-name">Urban Expansion</span>
+      <span class="tab-icon">🏙️</span>
+      <div class="tab-meta">
+        <span class="tab-num">Lens 01</span>
+        <span class="tab-name">Urban Expansion</span>
+      </div>
     </div>
     <div class="tab-body">
       <div class="tab-body-inner">
-        <p class="tab-desc">Built-settlement growth and degree of urbanisation, 2001–2080.</p>
+        <p class="tab-desc">Built-settlement growth and urbanisation, 2001–2080.</p>
         <div class="click-hint">Open lens <span class="hint-arrow">→</span></div>
       </div>
     </div>
@@ -305,12 +348,15 @@
 
   <a class="lens-tab" href="population.html" data-lens="population">
     <div class="tab-header">
-      <span class="tab-num">02</span>
-      <span class="tab-name">Population Growth</span>
+      <span class="tab-icon">📈</span>
+      <div class="tab-meta">
+        <span class="tab-num">Lens 02</span>
+        <span class="tab-name">Population Growth</span>
+      </div>
     </div>
     <div class="tab-body">
       <div class="tab-body-inner">
-        <p class="tab-desc">Measured counts transitioning to five diverging SSP projections, 2015–2050.</p>
+        <p class="tab-desc">Five diverging SSP projections, 2015–2050.</p>
         <div class="click-hint">Open lens <span class="hint-arrow">→</span></div>
       </div>
     </div>
@@ -318,24 +364,22 @@
 
   <div class="lens-tab dimmed" data-lens="water">
     <div class="tab-header">
-      <span class="tab-num">03</span>
-      <span class="tab-name">Water Stress</span>
-    </div>
-    <div class="tab-body">
-      <div class="tab-body-inner">
-        <p class="tab-desc" style="font-style:italic;opacity:0.6;">Coming at final stage</p>
+      <span class="tab-icon">💧</span>
+      <div class="tab-meta">
+        <span class="tab-num">Lens 03</span>
+        <span class="tab-name">Water Stress</span>
+        <span class="dev-badge"><span class="dev-dot"></span>In Development</span>
       </div>
     </div>
   </div>
 
   <div class="lens-tab dimmed" data-lens="heat">
     <div class="tab-header">
-      <span class="tab-num">04</span>
-      <span class="tab-name">Heat Anomaly</span>
-    </div>
-    <div class="tab-body">
-      <div class="tab-body-inner">
-        <p class="tab-desc" style="font-style:italic;opacity:0.6;">Coming at final stage</p>
+      <span class="tab-icon">🌡️</span>
+      <div class="tab-meta">
+        <span class="tab-num">Lens 04</span>
+        <span class="tab-name">Heat Anomaly</span>
+        <span class="dev-badge"><span class="dev-dot"></span>In Development</span>
       </div>
     </div>
   </div>
