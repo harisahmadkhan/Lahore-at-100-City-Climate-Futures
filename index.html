@@ -77,8 +77,8 @@
   }
 
   .title-block p {
-    font-size: clamp(0.65rem, 1.1vw, 0.76rem);
-    color: rgba(255, 255, 255, 0.42);
+    font-size: clamp(0.82rem, 1.4vw, 0.96rem);
+    color: rgba(255, 255, 255, 0.58);
     letter-spacing: 0.05em;
   }
 
@@ -153,6 +153,16 @@
       inset 0 1px 0 rgba(255,255,255,0.08);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Invisible bridge fills the gap between button top and tooltip bottom — kills flicker */
+  .dock-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: -12px;
+    right: -12px;
+    height: 20px;
   }
 
   .dock-btn:hover .dock-tooltip { opacity: 1; transform: translateY(0) translateX(-50%); pointer-events: none; }
