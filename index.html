@@ -22,7 +22,7 @@
     background: url('hero.png') center center / cover no-repeat;
   }
 
-  /* Bottom-only gradient — image breathes above */
+  /* Bottom gradient — fully covers image's baked-in text, fades above */
   .hero::after {
     content: '';
     position: absolute;
@@ -30,9 +30,10 @@
     background: linear-gradient(
       to top,
       rgba(4, 7, 18, 1.00) 0%,
-      rgba(4, 7, 18, 0.96) 22%,
-      rgba(4, 7, 18, 0.20) 46%,
-      transparent 62%
+      rgba(4, 7, 18, 0.99) 30%,
+      rgba(4, 7, 18, 0.60) 45%,
+      rgba(4, 7, 18, 0.10) 58%,
+      transparent 70%
     );
   }
 
