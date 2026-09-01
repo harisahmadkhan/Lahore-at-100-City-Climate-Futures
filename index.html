@@ -22,7 +22,7 @@
     background: url('hero.png') center center / cover no-repeat;
   }
 
-  /* Bottom gradient — fully covers image's baked-in text, fades above */
+  /* Subtle bottom gradient — just enough for tab legibility */
   .hero::after {
     content: '';
     position: absolute;
@@ -30,10 +30,9 @@
     background: linear-gradient(
       to top,
       rgba(4, 7, 18, 1.00) 0%,
-      rgba(4, 7, 18, 0.99) 30%,
-      rgba(4, 7, 18, 0.60) 45%,
-      rgba(4, 7, 18, 0.10) 58%,
-      transparent 70%
+      rgba(4, 7, 18, 0.70) 18%,
+      rgba(4, 7, 18, 0.08) 40%,
+      transparent 55%
     );
   }
 
