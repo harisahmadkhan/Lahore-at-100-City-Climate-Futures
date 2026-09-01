@@ -21,12 +21,28 @@
   .hero {
     position: fixed;
     inset: 0;
-    background: url('lahore-night.png') center center / cover no-repeat;
+    overflow: hidden; /* clip breathing overflow */
   }
 
-  /* Subtle bottom gradient — just enough for tab legibility */
-  .hero::after {
-    content: '';
+  /* Image layer — animates independently */
+  .hero-img {
+    position: absolute;
+    inset: -6%; /* extra room so edges never show during scale */
+    background: url('lahore-night.png') center center / cover no-repeat;
+    animation: breathe 14s ease-in-out infinite alternate;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  @keyframes breathe {
+    0%   { transform: scale(1.00) translate(0%,    0%);    }
+    40%  { transform: scale(1.05) translate(-0.6%, 0.4%);  }
+    70%  { transform: scale(1.07) translate(0.4%,  -0.3%); }
+    100% { transform: scale(1.03) translate(-0.2%, 0.2%);  }
+  }
+
+  /* Gradient sits above the animating image layer */
+  .hero-gradient {
     position: absolute;
     inset: 0;
     background: linear-gradient(
@@ -36,6 +52,7 @@
       rgba(4, 7, 18, 0.08) 40%,
       transparent 55%
     );
+    pointer-events: none;
   }
 
   /* ── Lens strip ── */
@@ -253,7 +270,10 @@
 </head>
 <body>
 
-<div class="hero"></div>
+<div class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-gradient"></div>
+</div>
 
 <!-- Title overlaid on the image -->
 <div class="title-block">
