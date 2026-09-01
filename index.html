@@ -1,17 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lahore at 100 — Climate Conscious City Futures</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lahore at 100 — Climate Conscious City Futures</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0A0F1E;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: #f5f0e8;
+    margin-bottom: 8px;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    color: #8a9ab5;
+    letter-spacing: 0.04em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 64px;
+  }
+
+  .card {
+    background: #111827;
+    border-radius: 12px;
+    padding: 28px 24px;
+    border: 1px solid #1e2a3a;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  a.card {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  a.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .card-accent {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 4px;
+  }
+
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .card p {
+    font-size: 0.875rem;
+    color: #8a9ab5;
+    line-height: 1.5;
+  }
+
+  .card.dimmed {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .coming-soon {
+    font-size: 0.75rem;
+    color: #4a5568;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  /* accent borders */
+  a.card[data-lens="urban"] { border-top: 3px solid #8B5CF6; }
+  a.card[data-lens="population"] { border-top: 3px solid #10B981; }
+  .card[data-lens="water"] { border-top: 3px solid #06B6D4; }
+  .card[data-lens="heat"] { border-top: 3px solid #F97316; }
+
+  footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #4a5568;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Lahore at 100</h1>
+  <p class="subtitle">Climate Conscious City Futures</p>
+  <p class="tagline">Four lenses. Five futures. One city.</p>
+</header>
+
+<div class="grid">
+
+  <a class="card" href="urban_expansion.html" data-lens="urban">
+    <div class="card-accent" style="background:#8B5CF6;"></div>
+    <h2>Urban Expansion</h2>
+    <p>Built-settlement growth and degree of urbanisation across Lahore, 2001–2080.</p>
+  </a>
+
+  <a class="card" href="population.html" data-lens="population">
+    <div class="card-accent" style="background:#10B981;"></div>
+    <h2>Population Growth</h2>
+    <p>Measured population counts transitioning to five diverging SSP projections, 2015–2050.</p>
+  </a>
+
+  <div class="card dimmed" data-lens="water">
+    <div class="card-accent" style="background:#06B6D4;"></div>
+    <h2>Water Stress</h2>
+    <p>WRI Aqueduct 4.0 watershed demand and supply across three scenarios.</p>
+    <span class="coming-soon">Coming at final stage</span>
+  </div>
+
+  <div class="card dimmed" data-lens="heat">
+    <div class="card-accent" style="background:#F97316;"></div>
+    <h2>Heat Anomaly</h2>
+    <p>Maximum temperature anomaly against 1970–2000 baseline across five SSP pathways.</p>
+    <span class="coming-soon">Coming at final stage</span>
+  </div>
+
+</div>
+
+<footer>
+  Smart City Hackathon Lahore 2026 &middot; Theme 2: City Intelligence &middot; MIT License
+</footer>
+
+</body>
 </html>
