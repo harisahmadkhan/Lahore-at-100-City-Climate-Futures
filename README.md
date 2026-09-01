@@ -5,7 +5,7 @@ An interactive climate intelligence platform showing Lahore across four data
 lenses from 2001 to 2080, driven by a year slider and five SSP scenario toggles.
 Built for the Smart City Hackathon Lahore 2026 (Theme 2: City Intelligence).
 
-**Live platform:** [lahoreat100.vercel.app](https://lahoreat100.vercel.app)
+**Live platform:** [lahore-at-100-city-climate-futures.vercel.app](https://lahore-at-100-city-climate-futures.vercel.app)
 
 ---
 
