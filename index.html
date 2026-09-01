@@ -50,22 +50,23 @@
   /* ── Title ── */
   .title-block {
     position: fixed;
-    top: 50%;
+    bottom: 148px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     text-align: center;
     z-index: 10;
     pointer-events: none;
+    white-space: nowrap;
   }
 
   .title-block h1 {
-    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
     font-weight: 200;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.92);
+    color: rgba(255, 255, 255, 0.95);
     line-height: 1;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .title-block h1 strong {
@@ -74,9 +75,9 @@
   }
 
   .title-block p {
-    font-size: clamp(0.75rem, 1.4vw, 0.90rem);
-    color: rgba(255, 255, 255, 0.42);
-    letter-spacing: 0.06em;
+    font-size: clamp(0.78rem, 1.4vw, 0.92rem);
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.05em;
   }
 
   /* ── Credits ── */
@@ -133,7 +134,7 @@
       box-shadow 0.35s ease,
       transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     /* resting state — barely visible */
-    opacity: 0.28;
+    opacity: 0.60;
   }
 
   .dock-btn.dimmed { cursor: default; }
