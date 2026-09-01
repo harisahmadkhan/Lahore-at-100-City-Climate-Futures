@@ -65,3 +65,7 @@ pipeline. All data is embedded as JavaScript arrays inside the HTML file.
 ## License
 
 MIT. Use it, fork it, extend it.
+
+---
+
+*Designed and built with curiosity by Haris Ahmad Khan*
