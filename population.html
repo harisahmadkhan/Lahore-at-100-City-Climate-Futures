@@ -5,7 +5,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 html,body,#map{height:100%;margin:0;background:#0d0d0d;}
-#panel{position:absolute;top:20px;left:20px;background:rgba(13,13,13,0.92);
+#panel{position:absolute;top:54px;left:20px;background:rgba(13,13,13,0.92);
 border:1px solid #c9a227;border-radius:8px;padding:16px 20px;min-width:260px;max-width:300px;
 max-height:90vh;overflow-y:auto;z-index:1000;font-family:Arial,Helvetica,sans-serif;color:#eee;}
 #panel h4{margin:0;color:#c9a227;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
@@ -27,6 +27,21 @@ padding:8px 10px;margin-top:10px;font-size:12px;line-height:1.55;color:#ddd;}
 #sspinfo em{color:#c9a227;display:block;margin-bottom:4px;font-style:italic;}
 #credit{margin-top:14px;font-size:10px;color:#777;line-height:1.4;}
 </style></head><body>
+<!-- Cross-lens navigation -->
+<div id="lahore-nav" style="position:fixed;top:0;left:0;right:0;height:40px;background:rgba(5,8,16,0.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:10000;display:flex;align-items:center;padding:0 18px;font-family:'Glacial Indifference',system-ui,sans-serif;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.06);">
+  <a href="index.html" style="color:rgba(255,255,255,0.80);text-decoration:none;font-weight:600;letter-spacing:0.08em;margin-right:auto;font-size:12px;">Lahore @ 100</a>
+  <a href="urban_expansion.html" data-nav="urban" style="color:#8B5CF6;text-decoration:none;margin-left:24px;opacity:0.7;transition:opacity 0.08s ease-out;font-size:12px;">Urban Expansion</a>
+  <a href="population.html" data-nav="population" style="color:#10B981;text-decoration:none;margin-left:24px;opacity:0.7;transition:opacity 0.08s ease-out;font-size:12px;">Population Growth</a>
+  <a href="water_stress.html" data-nav="water" style="color:#06B6D4;text-decoration:none;margin-left:24px;opacity:0.7;transition:opacity 0.08s ease-out;font-size:12px;">Water Stress</a>
+  <a href="heat_anomaly.html" data-nav="heat" style="color:#F97316;text-decoration:none;margin-left:24px;opacity:0.7;transition:opacity 0.08s ease-out;font-size:12px;">Heat Anomaly</a>
+</div>
+<style>
+  @import url('https://fonts.cdnfonts.com/css/glacial-indifference-2');
+  #lahore-nav a[data-nav]:hover { opacity: 1 !important; }
+  #lahore-nav a[data-nav].lahore-nav-active { opacity: 1 !important; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+</style>
+<script>document.addEventListener('DOMContentLoaded',function(){var a=document.querySelector('#lahore-nav a[data-nav="population"]');if(a)a.classList.add('lahore-nav-active');})</script>
+
 <div id="map"></div>
 <div id="panel">
 <h4>Lahore at 100</h4><h2>Population Growth</h2>

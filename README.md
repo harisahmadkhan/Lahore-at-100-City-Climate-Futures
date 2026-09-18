@@ -17,9 +17,9 @@ Built for the Smart City Hackathon Lahore 2026 · Theme 2: City Intelligence
 
 **Population Growth** — Who will be here, and how many. Measured HDX Pakistan census counts carry the story through 2030, at which point five diverging WorldPop FuturePop SSP projections take over — each one a coherent narrative about how global development choices ripple down to a single city's growth curve. The transition is seamless and intentional: certainty gives way to scenario precisely where the data does.
 
-**Water Stress** *(arriving at final stage)* — How strained the watershed becomes under each future. WRI Aqueduct 4.0 demand-and-supply classifications, disaggregated to HydroSHEDS Level 6 sub-basins, map Lahore's water vulnerability at 2030, 2050, and 2080 across three stress pathways aligned to the SSP framework. The picture it draws is not comfortable.
+**Water Stress** — How strained the watershed becomes under each future. WRI Aqueduct 4.0 demand-and-supply classifications, disaggregated to HydroSHEDS Level 6 sub-basins, map Lahore's water vulnerability at 2030, 2050, and 2080 across three stress pathways aligned to the SSP framework. The picture it draws is not comfortable.
 
-**Heat Anomaly** *(arriving at final stage)* — How much hotter Lahore becomes relative to the world it already knew. Maximum temperature anomalies against the 1970–2000 historical baseline, drawn from WorldClim CMIP6 downscaled output (MRI-ESM2-0), show five distinct warming trajectories through 2060. Some are survivable. Some are not.
+**Heat Anomaly** — How much hotter Lahore becomes relative to the world it already knew. Maximum temperature anomalies against the 1970–2000 historical baseline, drawn from WorldClim CMIP6 downscaled output (MRI-ESM2-0), show five distinct warming trajectories through 2060. Some are survivable. Some are not.
 
 ---
 
