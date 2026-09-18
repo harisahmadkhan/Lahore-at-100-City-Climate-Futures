@@ -52,7 +52,7 @@
   /* ── Title ── */
   .title-block {
     position: fixed;
-    bottom: 116px;
+    bottom: 180px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -310,19 +310,17 @@
   .dock-btn {
     animation: dock-enter 280ms cubic-bezier(0.23, 1, 0.32, 1) both;
   }
-  .dock-btn:nth-child(1) { animation-delay: 0ms; }
-  .dock-btn:nth-child(2) { animation-delay: 50ms; }
-  .dock-btn:nth-child(3) { animation-delay: 100ms; }
-  .dock-btn:nth-child(4) { animation-delay: 150ms; }
+  .dock-btn:nth-of-type(1) { animation-delay: 0ms; }
+  .dock-btn:nth-of-type(2) { animation-delay: 50ms; }
+  .dock-btn:nth-of-type(3) { animation-delay: 100ms; }
+  .dock-btn:nth-of-type(4) { animation-delay: 150ms; }
+  .dock-btn:nth-of-type(5) { animation-delay: 250ms; }
 
   @keyframes dock-enter {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 0.60; transform: translateY(0); }
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .dock-btn:hover { transform: translateY(-2px); }
-  }
   .dock-btn:active { transform: scale(0.98) !important; transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
 
   @media (prefers-reduced-motion: reduce) {
@@ -389,7 +387,39 @@
     <span class="dock-num">04</span>
   </a>
 
+  <span style="width:1px;height:28px;background:rgba(255,255,255,0.10);align-self:center;flex-shrink:0;"></span>
+
+  <div class="dock-btn dock-ssp-trigger" data-lens="ssp" onclick="document.getElementById('ssp-overlay').classList.toggle('visible')">
+    <div class="dock-tooltip">
+      <div class="tooltip-name">SSP Scenarios</div>
+      <div class="tooltip-desc">What the five futures mean.</div>
+    </div>
+    <span class="dock-icon">🌐</span>
+    <span class="dock-num">SSP</span>
+  </div>
+
 </div>
+
+<!-- SSP Explainer overlay -->
+<div id="ssp-overlay" style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(4,7,18,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity 250ms cubic-bezier(0.23,1,0.32,1);">
+  <div style="max-width:560px;padding:40px;font-family:'Glacial Indifference',system-ui,sans-serif;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;">Shared Socioeconomic Pathways</div>
+    <h2 style="font-size:1.6rem;font-weight:300;color:rgba(255,255,255,0.90);margin-bottom:24px;letter-spacing:0.06em;">Five plausible futures. Not predictions &mdash; structured questions.</h2>
+    <div style="display:grid;gap:16px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#10B981;min-width:44px;">SSP1</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Sustainability</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Rapid decarbonisation. Strong international cooperation. Green investment. Low challenges to both mitigation and adaptation.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#3B82F6;min-width:44px;">SSP2</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Middle of the Road</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Current social, economic, and technological trends continue. Slow progress. Moderate challenges across the board.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#EF4444;min-width:44px;">SSP3</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Regional Rivalry</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Nationalistic, fragmented world. High pollution. Slow economic growth. High challenges to both mitigation and adaptation.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#F59E0B;min-width:44px;">SSP4</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Inequality</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Highly unequal world. Clean technology for elites. High adaptation challenges for the rest. Development diverges sharply.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#F97316;min-width:44px;">SSP5</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Fossil-Fuelled Growth</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Rapid economic growth powered by fossil fuels. Energy-intensive lifestyles. Highest emissions. Low adaptation challenges but high mitigation challenges.</span></div></div>
+    </div>
+    <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;">If humanity chooses this path, what arrives? Each lens answers that question for Lahore.</p>
+    <button onclick="document.getElementById('ssp-overlay').classList.remove('visible')" style="margin-top:20px;padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.60);font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:0.06em;">Close</button>
+  </div>
+</div>
+<style>
+  #ssp-overlay.visible { opacity: 1; pointer-events: auto; }
+  .dock-ssp-trigger { --accent: #3B82F6; --accent-dim: rgba(59,130,246,0.35); --glow-full: rgba(59,130,246,0.18); --glow-edge: rgba(59,130,246,0.06); --glow-cast: rgba(59,130,246,0.22); }
+</style>
 
 <script>
   document.querySelectorAll('.dock-btn:not(.dimmed)').forEach(btn => {
