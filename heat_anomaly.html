@@ -237,7 +237,7 @@ slider.oninput = () => {
 render();
 </script>
 <!-- Lahore info panel -->
-<div id="lahore-info" style="position:fixed;left:0;top:54px;width:320px;z-index:9000;background:rgba(10,15,30,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-right:1px solid #F9731666;border-radius:0 8px 8px 0;padding:20px;font-family:'Glacial Indifference',system-ui,sans-serif;transform:translateX(-100%);opacity:0;transition:transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1);max-height:calc(100vh - 60px);overflow-y:auto;">
+<div id="lahore-info" style="position:fixed;right:16px;bottom:60px;width:300px;z-index:9000;background:rgba(10,15,30,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #F9731666;border-radius:12px;padding:20px;font-family:'Glacial Indifference',system-ui,sans-serif;transform:scale(0.95);opacity:0;transition:transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1);max-height:360px;overflow-y:auto;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
     <span style="font-size:16px;font-weight:600;color:#F97316;letter-spacing:0.04em;">Heat Anomaly</span>
     <button id="lahore-info-close" style="width:28px;height:28px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:transparent;color:rgba(255,255,255,0.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 120ms cubic-bezier(0.23,1,0.32,1);" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">&times;</button>
@@ -269,8 +269,8 @@ render();
   var panel=document.getElementById('lahore-info'),btn=document.getElementById('lahore-info-close'),reopen=document.getElementById('lahore-info-reopen');
   // Stagger blocks in
   setTimeout(function(){document.querySelectorAll('.lahore-info-block').forEach(function(b){b.style.opacity='1';b.style.transform='translateY(0)';});},50);
-  btn.onclick=function(){panel.style.transform='translateX(-100%)';panel.style.opacity='0';panel.style.transition='transform 150ms cubic-bezier(0.77,0,0.175,1),opacity 150ms cubic-bezier(0.77,0,0.175,1)';setTimeout(function(){reopen.style.display='flex';reopen.style.opacity='0';setTimeout(function(){reopen.style.opacity='1';},20);},160);};
-  reopen.onclick=function(){reopen.style.display='none';panel.style.transition='transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1)';panel.style.transform='translateX(0)';panel.style.opacity='1';};
+  btn.onclick=function(){panel.style.transform='scale(0.95)';panel.style.opacity='0';panel.style.transition='transform 150ms cubic-bezier(0.77,0,0.175,1),opacity 150ms cubic-bezier(0.77,0,0.175,1)';setTimeout(function(){reopen.style.display='flex';reopen.style.opacity='0';setTimeout(function(){reopen.style.opacity='1';},20);},160);};
+  reopen.onclick=function(){reopen.style.display='none';panel.style.transition='transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1)';panel.style.transform='scale(1)';panel.style.opacity='1';};
   // Finding banner delayed entrance
   setTimeout(function(){var b=document.getElementById('lahore-banner');b.style.opacity='1';b.style.transform='translateX(-50%) translateY(0)';},900);
 })();
@@ -281,15 +281,16 @@ render();
 <!-- SSP Explainer Tooltip -->
 <div id="lahore-ssp-help" style="position:fixed;z-index:9500;display:none;">
   <button id="lahore-ssp-trigger" style="width:auto;height:auto;border-radius:12px;border:1px solid #334155;background:#111827;color:#CBD5E1;font-size:10px;letter-spacing:0.06em;font-weight:700;cursor:pointer;font-family:system-ui;padding:4px 8px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">SSP</button>
-  <div id="lahore-ssp-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);right:0;left:auto;background:#111827;border:1px solid #334155;border-radius:6px;padding:14px;max-width:240px;font-family:system-ui,sans-serif;z-index:9500;box-shadow:0 4px 24px rgba(0,0,0,0.5);transform-origin:bottom right;transform:scale(0.95);opacity:0;transition:transform 150ms cubic-bezier(0.23,1,0.32,1),opacity 150ms cubic-bezier(0.23,1,0.32,1);">
-    <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:8px;">SSP Scenarios</div>
-    <div style="font-size:10px;line-height:1.7;color:#94A3B8;">
-      <b style="color:#10B981">SSP1</b> Green growth, global cooperation<br>
-      <b style="color:#3B82F6">SSP2</b> Current trends continue slowly<br>
-      <b style="color:#EF4444">SSP3</b> Nations fragment, emissions rise<br>
-      <b style="color:#F59E0B">SSP4</b> Rich adapt, poor don't<br>
-      <b style="color:#F97316">SSP5</b> Fossil-fuelled, fastest warming
+  <div id="lahore-ssp-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);right:0;left:auto;background:#111827;border:1px solid #334155;border-radius:6px;padding:14px;max-width:280px;font-family:system-ui,sans-serif;z-index:9500;box-shadow:0 4px 24px rgba(0,0,0,0.5);transform-origin:bottom right;transform:scale(0.95);opacity:0;transition:transform 150ms cubic-bezier(0.23,1,0.32,1),opacity 150ms cubic-bezier(0.23,1,0.32,1);">
+    <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:0.06em;">SSP Scenarios</div>
+    <div style="font-size:10px;line-height:1.55;color:#94A3B8;">
+      <b style="color:#10B981">1</b> Sustainable &mdash; green growth, cooperation<br>
+      <b style="color:#3B82F6">2</b> Middle road &mdash; current trends continue<br>
+      <b style="color:#EF4444">3</b> Rivalry &mdash; fragmented, high emissions<br>
+      <b style="color:#F59E0B">4</b> Inequality &mdash; elites adapt, rest don't<br>
+      <b style="color:#F97316">5</b> Fossil growth &mdash; fastest warming
     </div>
+    <div style="margin-top:6px;font-size:9px;color:#64748B;line-height:1.4;">IPCC AR6 framework &middot; 5 futures from sustainability to fossil dependence</div>
   </div>
 </div>
 <script>

@@ -52,7 +52,7 @@
   /* ── Title ── */
   .title-block {
     position: fixed;
-    bottom: 310px;
+    bottom: 200px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -210,15 +210,15 @@
   /* ── Tooltip card ── */
   .dock-tooltip {
     position: absolute;
-    bottom: calc(100% + 14px);
+    bottom: calc(100% + 10px);
     left: 50%;
     transform: translateY(8px) translateX(-50%);
-    min-width: 160px;
-    max-width: 200px;
+    min-width: 120px;
+    max-width: 180px;
     background: rgba(6, 9, 24, 0.90);
     border: 1px solid var(--accent-dim);
-    border-radius: 12px;
-    padding: 10px 14px;
+    border-radius: 10px;
+    padding: 8px 12px;
     text-align: center;
     opacity: 0;
     transition: opacity 0.20s ease 0.08s, transform 0.20s ease 0.08s;
@@ -350,8 +350,7 @@
   <a class="dock-btn" href="urban_expansion.html" data-lens="urban">
     <div class="dock-tooltip">
       <div class="tooltip-name">Urban Expansion</div>
-      <div class="tooltip-desc">Built-settlement growth and urbanisation, 2001–2080.</div>
-      <div class="tooltip-cta">Open lens →</div>
+      <div class="tooltip-desc">Built-settlement growth, 2001–2080</div>
     </div>
     <span class="dock-icon">🏙️</span>
     <span class="dock-num">01</span>
@@ -360,8 +359,7 @@
   <a class="dock-btn" href="population.html" data-lens="population">
     <div class="dock-tooltip">
       <div class="tooltip-name">Population Growth</div>
-      <div class="tooltip-desc">Five diverging SSP projections, 2015–2050.</div>
-      <div class="tooltip-cta">Open lens →</div>
+      <div class="tooltip-desc">SSP projections, 2015–2050</div>
     </div>
     <span class="dock-icon">📈</span>
     <span class="dock-num">02</span>
@@ -370,8 +368,7 @@
   <a class="dock-btn" href="water_stress.html" data-lens="water">
     <div class="dock-tooltip">
       <div class="tooltip-name">Water Stress</div>
-      <div class="tooltip-desc">WRI Aqueduct watershed demand and supply, 2030–2080.</div>
-      <div class="tooltip-cta">Open lens →</div>
+      <div class="tooltip-desc">Aqueduct demand &amp; supply, 2030–2080</div>
     </div>
     <span class="dock-icon">💧</span>
     <span class="dock-num">03</span>
@@ -380,8 +377,7 @@
   <a class="dock-btn" href="heat_anomaly.html" data-lens="heat">
     <div class="dock-tooltip">
       <div class="tooltip-name">Heat Anomaly</div>
-      <div class="tooltip-desc">Max temperature anomaly vs. 1970–2000 baseline.</div>
-      <div class="tooltip-cta">Open lens →</div>
+      <div class="tooltip-desc">Temperature anomaly vs. baseline</div>
     </div>
     <span class="dock-icon">🌡️</span>
     <span class="dock-num">04</span>
@@ -401,19 +397,32 @@
 </div>
 
 <!-- SSP Explainer overlay -->
-<div id="ssp-overlay" style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(4,7,18,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity 250ms cubic-bezier(0.23,1,0.32,1);">
-  <div style="max-width:560px;padding:40px;font-family:'Glacial Indifference',system-ui,sans-serif;">
+<div id="ssp-overlay" style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(4,7,18,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity 250ms cubic-bezier(0.23,1,0.32,1);overflow-y:auto;">
+  <div style="max-width:640px;padding:40px 36px;font-family:'Glacial Indifference',system-ui,sans-serif;margin:40px auto;">
+
     <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;">Shared Socioeconomic Pathways</div>
-    <h2 style="font-size:1.6rem;font-weight:300;color:rgba(255,255,255,0.90);margin-bottom:24px;letter-spacing:0.06em;">Five plausible futures. Not predictions &mdash; structured questions.</h2>
-    <div style="display:grid;gap:16px;">
-      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#10B981;min-width:44px;">SSP1</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Sustainability</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Rapid decarbonisation. Strong international cooperation. Green investment. Low challenges to both mitigation and adaptation.</span></div></div>
-      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#3B82F6;min-width:44px;">SSP2</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Middle of the Road</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Current social, economic, and technological trends continue. Slow progress. Moderate challenges across the board.</span></div></div>
-      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#EF4444;min-width:44px;">SSP3</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Regional Rivalry</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Nationalistic, fragmented world. High pollution. Slow economic growth. High challenges to both mitigation and adaptation.</span></div></div>
-      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#F59E0B;min-width:44px;">SSP4</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Inequality</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Highly unequal world. Clean technology for elites. High adaptation challenges for the rest. Development diverges sharply.</span></div></div>
-      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1.1rem;font-weight:700;color:#F97316;min-width:44px;">SSP5</span><div><span style="color:rgba(255,255,255,0.85);font-size:14px;font-weight:500;">Fossil-Fuelled Growth</span><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Rapid economic growth powered by fossil fuels. Energy-intensive lifestyles. Highest emissions. Low adaptation challenges but high mitigation challenges.</span></div></div>
+    <h2 style="font-size:1.5rem;font-weight:300;color:rgba(255,255,255,0.92);margin-bottom:16px;letter-spacing:0.05em;line-height:1.35;">Five plausible futures. Not predictions &mdash; structured questions.</h2>
+
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:12px;">The Shared Socioeconomic Pathways were developed between 2011 and 2015 by a multidisciplinary committee of climate scientists, economists, energy engineers, and sociologists coordinated through the Integrated Assessment Modeling Consortium (IAMC). They replaced the older SRES scenarios (published in 2000) that had guided climate research for over a decade.</p>
+
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:12px;">The SSP framework was formally adopted by the IPCC for its Sixth Assessment Report (AR6, 2021) and became the foundation of the CMIP6 climate model experiments used by research groups worldwide. Each pathway describes a coherent narrative about how global society, demographics, economics, and technology might evolve through 2100 &mdash; and what that means for greenhouse gas emissions and climate adaptation capacity.</p>
+
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:22px;">The pathways are not forecasts. They are structured &ldquo;what if&rdquo; scenarios designed to bracket the range of plausible futures, so that policymakers, urban planners, and researchers can stress-test decisions against each one. In this platform, each lens applies these five pathways to Lahore specifically &mdash; translating global narratives into local, visible consequences.</p>
+
+    <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:20px;"></div>
+
+    <div style="display:grid;gap:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1rem;font-weight:700;color:#10B981;min-width:40px;">SSP1</span><div><span style="color:rgba(255,255,255,0.88);font-size:13px;font-weight:600;">Sustainability</span><br><span style="color:rgba(255,255,255,0.48);font-size:12px;line-height:1.5;">Global cooperation, green investment, rapid decarbonisation. Low challenges to mitigation and adaptation.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1rem;font-weight:700;color:#3B82F6;min-width:40px;">SSP2</span><div><span style="color:rgba(255,255,255,0.88);font-size:13px;font-weight:600;">Middle of the Road</span><br><span style="color:rgba(255,255,255,0.48);font-size:12px;line-height:1.5;">Current trends continue. Uneven progress. Moderate challenges across the board.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1rem;font-weight:700;color:#EF4444;min-width:40px;">SSP3</span><div><span style="color:rgba(255,255,255,0.88);font-size:13px;font-weight:600;">Regional Rivalry</span><br><span style="color:rgba(255,255,255,0.48);font-size:12px;line-height:1.5;">Nationalistic, fragmented world. High pollution, slow growth. High challenges to both.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1rem;font-weight:700;color:#F59E0B;min-width:40px;">SSP4</span><div><span style="color:rgba(255,255,255,0.88);font-size:13px;font-weight:600;">Inequality</span><br><span style="color:rgba(255,255,255,0.48);font-size:12px;line-height:1.5;">Clean technology for elites, high adaptation burden on the rest. Development diverges sharply.</span></div></div>
+      <div style="display:flex;gap:14px;align-items:flex-start;"><span style="font-size:1rem;font-weight:700;color:#F97316;min-width:40px;">SSP5</span><div><span style="color:rgba(255,255,255,0.88);font-size:13px;font-weight:600;">Fossil-Fuelled Growth</span><br><span style="color:rgba(255,255,255,0.48);font-size:12px;line-height:1.5;">Rapid growth powered by fossil fuels. Highest emissions. Easy adaptation, hardest mitigation.</span></div></div>
     </div>
-    <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;">If humanity chooses this path, what arrives? Each lens answers that question for Lahore.</p>
-    <button onclick="document.getElementById('ssp-overlay').classList.remove('visible')" style="margin-top:20px;padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.60);font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:0.06em;">Close</button>
+
+    <div style="height:1px;background:rgba(255,255,255,0.08);margin:20px 0 16px;"></div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.30);line-height:1.6;">Source: IPCC AR6 (2021) &middot; Riahi et al., <em>Global Environmental Change</em> 42, 2017 &middot; IAMC SSP Database</p>
+
+    <button onclick="document.getElementById('ssp-overlay').classList.remove('visible')" style="margin-top:16px;padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.60);font-size:12px;cursor:pointer;font-family:inherit;letter-spacing:0.06em;">Close</button>
   </div>
 </div>
 <style>
