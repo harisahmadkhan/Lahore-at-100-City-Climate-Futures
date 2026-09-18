@@ -52,8 +52,10 @@ background:transparent;color:#c9a227;font-size:12px;cursor:pointer;}
 <div id="scentext"></div>
 <div id="note">Lahore's stress score sits near the top of the ramp under every SSP and every window. Its water stress is structural, not scenario-dependent.</div>
 <div class="row"><label>Combined stress score (0 = least, 100 = most stressed)</label>
+<div style="font-size:11px;color:#fff;margin-bottom:4px;font-weight:600;font-family:system-ui;">Water stress · global percentile</div>
 <div id="gradbar"></div>
-<div id="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div></div>
+<div id="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+<div style="font-size:10px;color:#64748B;margin-top:4px;font-family:system-ui;">WRI Aqueduct 4.0</div></div>
 <div id="credit">WRI Aqueduct 4.0 (Kuzma et al. 2023), CC BY 4.0 · basins at HydroSHEDS level 6, clipped to Pakistan · SSP1/3/5 direct from Optimistic/BAU/Pessimistic; SSP2/4 estimated as per-basin midpoints · stress = mean of demand percentile and inverted supply-stability percentile</div>
 </div>
 <script>
@@ -114,11 +116,15 @@ const basinLayer = L.geoJSON(BASINS, {
     layer.on('click', () => {
       const p = f.properties;
       const sc = stress(p, curSSP, curWin);
+      var demPct = p['ssp' + curSSP + '_demand_pct_' + curWin];
+      var supPct = p['ssp' + curSSP + '_supply_pct_' + curWin];
+      var topQ = (demPct >= 75) ? '<br><span style="color:#F59E0B;font-weight:600;">&#x26A0; Top 25% globally</span>' : '';
       layer.bindPopup(
-        '<b>Stress score: ' + (sc == null ? '-' : sc.toFixed(1)) + '</b><br>' +
-        'Demand: ' + p['ssp' + curSSP + '_demand_pct_' + curWin] + 'th pct<br>' +
-        'Supply: ' + p['ssp' + curSSP + '_supply_pct_' + curWin] + 'th pct' +
-        (p.is_lahore ? '<br><b>Lahore district basin</b>' : '')).openPopup();
+        '<div style="font-size:11px;color:#06B6D4;font-weight:600;margin-bottom:2px;">Water Stress</div>' +
+        '<b>Stress score: ' + (sc == null ? '-' : sc.toFixed(1)) + ' global percentile</b><br>' +
+        'Demand: ' + demPct + 'th percentile<br>' +
+        'Supply: ' + supPct + 'th percentile' +
+        (p.is_lahore ? '<br><b>Lahore district basin</b>' : '') + topQ).openPopup();
     });
   }
 }).addTo(map);
@@ -164,4 +170,106 @@ function refresh() {
 }
 
 refresh();
-</script></body></html>
+</script><!-- Lahore info panel -->
+<div id="lahore-info" style="position:fixed;left:0;top:54px;width:320px;z-index:9000;background:rgba(10,15,30,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-right:1px solid #06B6D466;border-radius:0 8px 8px 0;padding:20px;font-family:'Glacial Indifference',system-ui,sans-serif;transform:translateX(0);opacity:1;transition:transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1);max-height:calc(100vh - 60px);overflow-y:auto;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <span style="font-size:16px;font-weight:600;color:#06B6D4;letter-spacing:0.04em;">Water Stress</span>
+    <button id="lahore-info-close" style="width:28px;height:28px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:transparent;color:rgba(255,255,255,0.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 120ms cubic-bezier(0.23,1,0.32,1);" onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'">&times;</button>
+  </div>
+  <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:14px;"></div>
+  <div class="lahore-info-block" style="opacity:0;transform:translateY(6px);transition:all 200ms cubic-bezier(0.23,1,0.32,1) 40ms;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;">What this shows</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.72);line-height:1.6;margin-bottom:14px;">How Lahore's two river basins rank against every other watershed on earth for water demand and supply stress, across three time windows and five SSP scenarios extending to 2080.</div>
+  </div>
+  <div class="lahore-info-block" style="opacity:0;transform:translateY(6px);transition:all 200ms cubic-bezier(0.23,1,0.32,1) 80ms;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;">Data sources</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.72);line-height:1.6;margin-bottom:14px;">WRI Aqueduct 4.0 provides global water risk indicators at the watershed level (HydroSHEDS Level 6 basins). Each basin is scored as a continuous global percentile &mdash; measured against the entire world's distribution, not just Pakistan's. Scenarios map to SSP1, SSP3, and SSP5, with SSP2 and SSP4 synthesized as per-basin midpoints.</div>
+  </div>
+  <div class="lahore-info-block" style="opacity:0;transform:translateY(6px);transition:all 200ms cubic-bezier(0.23,1,0.32,1) 120ms;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;">What to look for</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.72);line-height:1.6;margin-bottom:14px;">Toggle through all five SSP scenarios. Lahore's shade barely moves. That is the finding &mdash; not a rendering error. Demand is pinned in the top global band under every future.</div>
+  </div>
+  <div class="lahore-info-block" style="opacity:0;transform:translateY(6px);transition:all 200ms cubic-bezier(0.23,1,0.32,1) 160ms;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;">Key finding</div>
+    <div style="font-size:13px;color:#06B6D4;line-height:1.6;font-weight:500;">Most of Lahore's water future is already written. The one exception is the southern catchment &mdash; click both basins across different SSPs and watch the supply percentile shift.</div>
+  </div>
+</div>
+<button id="lahore-info-reopen" style="position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:9000;width:32px;height:32px;border-radius:50%;border:1px solid #06B6D466;background:rgba(10,15,30,0.85);color:#06B6D4;font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:transform 120ms cubic-bezier(0.23,1,0.32,1);backdrop-filter:blur(8px);" onmousedown="this.style.transform='translateY(-50%) scale(0.97)'" onmouseup="this.style.transform='translateY(-50%) scale(1)'">&#8505;</button>
+<!-- Finding banner -->
+<div id="lahore-banner" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);z-index:9000;background:rgba(17,24,39,0.95);border:1px solid #06B6D480;border-radius:20px;padding:8px 20px;font-family:'Glacial Indifference',system-ui,sans-serif;font-size:13px;color:#F5F0E8;white-space:nowrap;max-width:600px;opacity:0;transition:transform 300ms cubic-bezier(0.23,1,0.32,1),opacity 300ms cubic-bezier(0.23,1,0.32,1);">Toggle every scenario. Lahore's water stress barely moves. Demand is already structural.</div>
+<script>
+(function(){
+  // Info panel open/close
+  var panel=document.getElementById('lahore-info'),btn=document.getElementById('lahore-info-close'),reopen=document.getElementById('lahore-info-reopen');
+  // Stagger blocks in
+  setTimeout(function(){document.querySelectorAll('.lahore-info-block').forEach(function(b){b.style.opacity='1';b.style.transform='translateY(0)';});},50);
+  btn.onclick=function(){panel.style.transform='translateX(-100%)';panel.style.opacity='0';panel.style.transition='transform 150ms cubic-bezier(0.77,0,0.175,1),opacity 150ms cubic-bezier(0.77,0,0.175,1)';setTimeout(function(){reopen.style.display='flex';reopen.style.opacity='0';setTimeout(function(){reopen.style.opacity='1';},20);},160);};
+  reopen.onclick=function(){reopen.style.display='none';panel.style.transition='transform 250ms cubic-bezier(0.23,1,0.32,1),opacity 250ms cubic-bezier(0.23,1,0.32,1)';panel.style.transform='translateX(0)';panel.style.opacity='1';};
+  // Finding banner delayed entrance
+  setTimeout(function(){var b=document.getElementById('lahore-banner');b.style.opacity='1';b.style.transform='translateX(-50%) translateY(0)';},900);
+})();
+</script>
+<style>
+@media(prefers-reduced-motion:reduce){.lahore-info-block,#lahore-info,#lahore-banner{transition-duration:0.01ms!important;}}
+</style>
+<!-- SSP Explainer Tooltip -->
+<div id="lahore-ssp-help" style="position:fixed;z-index:9500;display:none;">
+  <button id="lahore-ssp-trigger" style="width:22px;height:22px;border-radius:50%;border:1px solid #334155;background:#111827;color:#CBD5E1;font-size:13px;cursor:pointer;font-family:system-ui;transition:transform 160ms cubic-bezier(0.23,1,0.32,1);" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">?</button>
+  <div id="lahore-ssp-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:#111827;border:1px solid #334155;border-radius:6px;padding:14px;max-width:300px;font-family:system-ui,sans-serif;z-index:9500;box-shadow:0 4px 24px rgba(0,0,0,0.5);transform-origin:bottom right;transform:scale(0.95);opacity:0;transition:transform 150ms cubic-bezier(0.23,1,0.32,1),opacity 150ms cubic-bezier(0.23,1,0.32,1);">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;">Shared Socioeconomic Pathways (SSPs)</div>
+    <div style="font-size:12px;color:#94A3B8;margin-bottom:10px;">The IPCC's framework for five plausible global futures.</div>
+    <div style="font-size:12px;line-height:1.6;">
+      <div style="margin-bottom:4px;"><span style="font-weight:700;color:#fff;">SSP1</span> <span style="color:#94A3B8;">&mdash; Sustainable development. Rapid decarbonization.</span></div>
+      <div style="margin-bottom:4px;"><span style="font-weight:700;color:#fff;">SSP2</span> <span style="color:#94A3B8;">&mdash; Middle of the road. Current trends continue.</span></div>
+      <div style="margin-bottom:4px;"><span style="font-weight:700;color:#fff;">SSP3</span> <span style="color:#94A3B8;">&mdash; Regional rivalry. High pollution. Fragmented world.</span></div>
+      <div style="margin-bottom:4px;"><span style="font-weight:700;color:#fff;">SSP4</span> <span style="color:#94A3B8;">&mdash; Deep inequality. Diverging development.</span></div>
+      <div><span style="font-weight:700;color:#fff;">SSP5</span> <span style="color:#94A3B8;">&mdash; Fossil-fueled growth. Highest emissions.</span></div>
+    </div>
+    <div style="height:1px;background:#334155;margin:10px 0;"></div>
+    <div style="font-size:11px;color:#94A3B8;font-style:italic;">These are not predictions. They are structured questions: if humanity chooses this path, what arrives?</div>
+  </div>
+</div>
+<script>
+(function(){
+  var trigger=document.getElementById('lahore-ssp-trigger'),tip=document.getElementById('lahore-ssp-tip'),opened=false,visible=false;
+  function positionHelp(){
+    var sspBtns=document.querySelector('#ssp-row,#sspbtns,#sspRow,[id*="ssp"]');
+    if(!sspBtns)return;
+    var r=sspBtns.getBoundingClientRect();
+    var container=document.getElementById('lahore-ssp-help');
+    container.style.position='fixed';
+    container.style.top=(r.top + r.height/2 - 11)+'px';
+    container.style.left=(r.right + 8)+'px';
+    container.style.display='block';
+  }
+  positionHelp(); setTimeout(positionHelp,500); window.addEventListener('resize',positionHelp);
+  trigger.onclick=function(e){
+    e.stopPropagation();
+    if(visible){tip.style.opacity='0';tip.style.transform='scale(0.95)';setTimeout(function(){tip.style.display='none';visible=false;},100);return;}
+    tip.style.display='block';
+    if(!opened){setTimeout(function(){tip.style.opacity='1';tip.style.transform='scale(1)';},120);opened=true;}
+    else{tip.style.opacity='1';tip.style.transform='scale(1)';}
+    visible=true;
+  };
+  document.addEventListener('click',function(){if(visible){tip.style.opacity='0';tip.style.transform='scale(0.95)';setTimeout(function(){tip.style.display='none';visible=false;},100);}});
+})();
+</script>
+<style>
+.ssp-btn,.btn,[class*="ssp"]{transition:transform 160ms cubic-bezier(0.23,1,0.32,1)!important;}
+.ssp-btn:active,.btn:active,[class*="ssp"]:active{transform:scale(0.97)!important;}
+@media(hover:hover)and(pointer:fine){.ssp-btn:hover,.btn:hover{opacity:0.9;}}
+</style>
+<div id="lahore-year-ctx" style="text-align:center;font-size:12px;margin-top:4px;color:#fff;font-family:system-ui;transition:filter 150ms ease-out,opacity 150ms ease-out;">Near-term projection</div>
+<script>
+(function(){
+  var lbl=document.getElementById('lahore-year-ctx');
+  if(!lbl)return;
+  var labels={'2030':'Near-term projection','2050':'Mid-century projection','2080':'Late-century projection'};
+  document.addEventListener('click',function(e){
+    var t=e.target;if(!t.dataset||!t.dataset.win)return;
+    lbl.style.filter='blur(3px)';lbl.style.opacity='0.4';
+    setTimeout(function(){lbl.textContent=labels[t.dataset.win]||t.dataset.win;lbl.style.color='#06B6D4';lbl.style.filter='blur(0)';lbl.style.opacity='1';},20);
+  });
+})();
+</script>
+</body></html>
